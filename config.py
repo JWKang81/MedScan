@@ -16,3 +16,4 @@ class Config:
     # 3. 檔案上傳設定
     UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 限制上傳大小為 16MB
+    
