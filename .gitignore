@@ -1,3 +1,4 @@
 *.png
 config.py
 uploads/
+*.jpg
