@@ -49,6 +49,7 @@ class Medication(db.Model):
     days = db.Column(db.Integer, nullable=True, comment='給藥天數')
     total_amount = db.Column(db.String(50), nullable=True, comment='總量 (如: 21顆)')
     indications = db.Column(db.String(255), nullable=True, comment='適應症/用途 (如: 止痛、退燒)')
-    
+    side_effects = db.Column(db.String(255), nullable=True, comment='副作用(如: 疲倦)')
+
     # 允許標記這個藥品是否有被使用者手動修改過 (衡量辨識準確度的指標)
     is_edited = db.Column(db.Boolean, default=False, comment='使用者是否手動校正過')

@@ -5,7 +5,7 @@ from app import db
 from app.models import Prescription
 import uuid
 # 匯入你剛寫好的兩個核心辨識函數
-from .recognition import scan_prescription, parse_tzu_chi_prescription
+from .recognition import scan_prescription, parse_da_pharmacy
 
 main_bp = Blueprint('main', __name__)
 
@@ -15,6 +15,14 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+from flask import render_template_string # 用來直接渲染字串或讀取檔案
+
+@main_bp.route('/')
+def index():
+    # 這裡假設你的 index.html 放在專案根目錄
+    with open('index.html', 'r', encoding='utf-8') as f:
+        return render_template_string(f.read())
+
 
 @main_bp.route('/api/upload', methods=['POST'])
 def upload_prescription():
@@ -53,7 +61,7 @@ def upload_prescription():
                 "details": raw_text
             }), 500
             
-        extracted_data = parse_tzu_chi_prescription(raw_text)
+        extracted_data = parse_da_pharmacy(raw_text)
 
         # 5. 回傳結果給前端，讓使用者確認或修改
         return jsonify({
@@ -64,6 +72,70 @@ def upload_prescription():
         }), 201
 
     return jsonify({"error": "不支援的檔案格式"}), 400
+
+@main_bp.route('/api/confirm', methods=['POST'])
+def confirm_prescription():
+    """
+    接收前端修改後的最終資料，並正式寫入資料庫
+    """
+    data = request.json
+    if not data:
+        return jsonify({"error": "缺少資料"}), 400
+
+    # 取得前端傳回的資訊
+    prescription_id = data.get('prescription_id')
+    final_data = data.get('data') # 這裡包含使用者修正後的姓名、藥名、天數等
+
+    if not prescription_id or not final_data:
+        return jsonify({"error": "資料格式不正確"}), 400
+
+    try:
+        # 1. 更新主表 Prescription 的資訊與狀態
+        prescription = Prescription.query.get(prescription_id)
+        if not prescription:
+            return jsonify({"error": "找不到該筆藥單紀錄"}), 404
+
+        prescription.hospital_name = final_data.get('hospital')
+        prescription.patient_name = final_data.get('patient_name')
+        prescription.status = 'completed' # 標記為處理完成
+        
+        # 處理日期格式 (從 YYYY/MM/DD 轉為 date 物件，若格式不合則跳過)
+        from datetime import datetime
+        raw_date = final_data.get('dispensing_date')
+        if raw_date:
+            try:
+                prescription.dispense_date = datetime.strptime(raw_date, '%Y/%m/%d')
+            except ValueError:
+                pass
+
+        # 2. 寫入藥品明細表 Medication
+        from app.models import Medication
+        
+        # 先檢查是否已經有藥品明細，若有則先刪除（防止重複提交）
+        Medication.query.filter_by(prescription_id=prescription_id).delete()
+
+        # 建立新的藥品紀錄
+        new_med = Medication(
+            prescription_id=prescription_id,
+            medicine_name=final_data.get('medicine_ch_name'),
+            dosage="每次 1 粒", # 這部分未來可以從 Regex 進一步細分
+            frequency=final_data.get('usage_instruction'),
+            days=int(final_data.get('days') or 0),
+            indications=final_data.get('indications'),
+            side_effects=final_data.get('side_effects')
+        )
+        
+        db.session.add(new_med)
+        db.session.commit()
+
+        return jsonify({
+            "message": "資料已成功存入系統",
+            "status": "success"
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"存檔失敗: {str(e)}"}), 500
 
 @main_bp.route('/test', methods=['GET'])
 def test():

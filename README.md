@@ -45,33 +45,33 @@ CREATE DATABASE prescription_db CHARACTER SET utf8mb4;
 
 📡 API 文件說明
 1. 系統狀態測試
-Endpoint: /test
+    Endpoint: /test
 
-Method: GET
+    Method: GET
 
-回傳成功範例:
+    回傳成功範例:
 
-JSON
-{
-    "message": "API 運作中",
-    "status": "success"
-}
+    JSON
+    {
+        "message": "API 運作中",
+        "status": "success"
+    }
 2. 上傳藥袋影像
-Endpoint: /api/upload
+    Endpoint: /api/upload
 
-Method: POST
+    Method: POST
 
-Content-Type: multipart/form-data
+    Content-Type: multipart/form-data
 
-參數:
+    參數:
 
-file: (File) 藥袋圖片檔案，僅支援 .jpg, .jpeg, .png。
+    file: (File) 藥袋圖片檔案，僅支援 .jpg, .jpeg, .png。
 
-回傳成功範例:
+    回傳成功範例:
 
-JSON
-{
-    "image_url": "uuid-string.jpg",
-    "message": "圖片上傳成功",
-    "prescription_id": 1
-}
+    JSON
+    {
+        "image_url": "uuid-string.jpg",
+        "message": "圖片上傳成功",
+        "prescription_id": 1
+    }
