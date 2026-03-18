@@ -46,8 +46,21 @@ python -m pytest -v：這會以「模組模式」啟動 pytest來避免 pytest -
 docker-compose up --build建制所有檔案
 
 
-修改完後，請執行以下指令。注意這裡加了 --no-cache，確保 Docker 不會抓舊的失敗紀錄，而是從頭開始跑：
 
+
+修改完後，請執行以下指令。注意這裡加了 --no-cache，確保 Docker 不會抓舊的失敗紀錄，而是從頭開始跑：
 Bash
 docker compose build --no-cache
 docker compose up
+
+映像檔中
+. 為什麼要裝 libgl1 和 libglib2.0-0？
+你的 Python 程式碼中有一行 import cv2 (OpenCV)。OpenCV 雖然是用 Python 呼叫，但它的底層是大量的 C++ 程式碼，這些程式碼需要存取作業系統的圖形顯示與系統功能。
+
+libgl1 (OpenGL)：OpenCV 在處理影像時，底層會用到圖形加速運算。即便我們是在沒有螢幕的伺服器（容器）跑，OpenCV 啟動時依然會去檢查系統有沒有 OpenGL 函式庫。少了它，import cv2 就會直接噴出 ImportError: libGL.so.1: cannot open shared object file。
+
+libglib2.0-0 (GLib)：這是 Linux 系統的核心工具庫（由 GNOME 專案維護）。許多像 Tesseract 這樣的底層工具或 OpenCV 的進階功能，都依賴 GLib 來進行系統層級的溝通（例如處理執行緒、字串、系統循環等）。
+
+
+記得用pip freeze > requirements.txt
+來寫要下載哪些

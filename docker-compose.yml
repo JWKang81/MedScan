@@ -16,7 +16,7 @@ services:
   db:
     image: mysql:8.0  # 使用官方 MySQL 8.0 映像檔
     ports:
-      - "3306:3306"
+      - "3307:3306" # 將電腦的 3307 對應到容器內的 3306
     environment:
       # 自動在容器內建立帳號、密碼與資料庫
       MYSQL_DATABASE: prescription_db
