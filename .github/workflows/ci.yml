@@ -31,7 +31,7 @@ jobs:
       # 4. 執行自動化測試 (重點：加上 PYTHONPATH)
       - name: Run Pytest
         env:
-          PYTHONPATH: .
+          PYTHONPATH: ${{ github.workspace }}
           DATABASE_URL: "sqlite:///:memory:"
         run: |
           python -m pytest -v

@@ -1,6 +1,4 @@
 *.png
-config.py
-uploads/
 *.jpg
 .DS_Store
 *.html
