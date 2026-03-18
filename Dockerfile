@@ -5,12 +5,17 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # 3. 安裝系統級別的依賴套件 (重點：安裝 Tesseract 與繁體中文包、OpenCV 所需的函式庫)
-RUN apt-get update && apt-get install -y \
+# (加入 --fix-missing 並分開執行以利排錯)
+# 更換 libgl1-mesa-glx 為 libgl1，這是目前 Debian 版本的標準做法
+
+RUN apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends \
     tesseract-ocr \
     tesseract-ocr-chi-tra \
     tesseract-ocr-eng \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # 4. 複製套件清單並安裝 Python 依賴

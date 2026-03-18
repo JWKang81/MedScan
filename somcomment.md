@@ -41,3 +41,13 @@ PyMySQL 或 mysqlclient：作為 Python 與 MySQL 溝通的底層驅動。
 
 進行test測試時
 python -m pytest -v：這會以「模組模式」啟動 pytest來避免 pytest -v 找不到app資料夾在哪
+加上 -v 參數可以讓輸出結果更詳細、更漂亮
+
+docker-compose up --build建制所有檔案
+
+
+修改完後，請執行以下指令。注意這裡加了 --no-cache，確保 Docker 不會抓舊的失敗紀錄，而是從頭開始跑：
+
+Bash
+docker compose build --no-cache
+docker compose up
