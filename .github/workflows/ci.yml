@@ -11,33 +11,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. 檢出程式碼
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      # 1. 檢出程式碼
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    # 2. 設定 Python 3.9
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.9"
+      # 2. 設定 Python 環境
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
 
-    # 3. 安裝依賴
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest pytest-flask
+      # 3. 安裝依賴 (包含測試所需的套件)
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-flask
 
-    # 4. 執行測試 (這是關鍵！合併了 PYTHONPATH 修正)
-    - name: Run Pytest with Proper Path
-      env:
-        # 強制將當前目錄 (.) 加入 Python 搜尋路徑，解決 config.py 找不到的問題
-        PYTHONPATH: .
-        DATABASE_URL: sqlite:///:memory:
-      run: |
-        python -m pytest -v
+      # 4. 執行自動化測試 (重點：加上 PYTHONPATH)
+      - name: Run Pytest
+        env:
+          PYTHONPATH: .
+          DATABASE_URL: sqlite:///:memory:
+        run: |
+          python -m pytest -v
 
-    # 5. 測試 Docker 是否能成功編譯
-    - name: Build Docker Image
-      run: |
-        docker build -t medicine-ocr-app:test .
+      # 5. 驗證 Dockerfile 是否能成功編譯
+      - name: Build Docker Image
+        run: |
+          docker build -t medicine-ocr-app:test .
