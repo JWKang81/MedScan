@@ -2,3 +2,19 @@
 *.jpg
 .DS_Store
 *.html
+.env
+
+# 隱藏機密環境變數
+.env
+
+# 其他不需要上傳的 Python 暫存檔
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# 虛擬環境 (如果有的話)
+venv/
+env/
+
+# 上傳的圖片暫存區 (可選)
+uploads/
