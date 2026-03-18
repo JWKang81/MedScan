@@ -1,4 +1,4 @@
-# 🏥 Medicine Prescription OCR System (藥袋影像辨識與建檔系統)
+# Medicine Prescription OCR System (藥袋影像辨識與建檔系統)
 
 [![CI/CD Pipeline](https://github.com/你的GitHub帳號/Medicine/actions/workflows/ci.yml/badge.svg)](https://github.com/你的GitHub帳號/Medicine/actions)
 [![Python Version](https://img.shields.io/badge/python-3.9-blue.svg)](https://python.org)
@@ -11,7 +11,7 @@
 
 ---
 
-## ✨ 核心亮點與技術棧 (Key Features & Tech Stack)
+## 技術實踐
 
 * **Backend Framework**: Python 3.9, Flask (Blueprint 架構)
 * **REST API & Documentation**: 遵循 RESTful 設計準則，並整合 `Flasgger` 提供符合 OpenAPI (Swagger) 規範的互動式 API 文件。
@@ -24,7 +24,7 @@
 
 ---
 
-## 🚀 快速啟動 (Getting Started)
+##  快速啟動 (Getting Started)
 
 透過 Docker Compose，您可以一鍵啟動整個系統，無需在本地端手動安裝資料庫或 OCR 引擎。
 
@@ -36,7 +36,7 @@
 
 ```bash
 # 複製專案原始碼
-git clone [https://github.com/你的GitHub帳號/Medicine.git](https://github.com/你的GitHub帳號/Medicine.git)
+git clone [https://github.com/JWKang81/Medicine.git](https://github.com/JWKang81/Medicine.git)
 cd Medicine
 
 # 使用 Docker Compose 一鍵建置並啟動服務 (包含 Web 與 MySQL)
