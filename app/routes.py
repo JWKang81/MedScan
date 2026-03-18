@@ -26,6 +26,27 @@ def index():
 
 @main_bp.route('/api/upload', methods=['POST'])
 def upload_prescription():
+    """
+    上傳藥袋影像並進行 OCR 辨識
+    ---
+    tags:
+      - Prescription Processing
+    consumes:
+      - multipart/form-data
+    parameters:
+      - in: formData
+        name: file
+        type: file
+        required: true
+        description: 藥袋的照片 (支援 jpg, png)
+    responses:
+      201:
+        description: 上傳並辨識成功，回傳萃取出的資料
+      400:
+        description: 檔案格式錯誤或未上傳檔案
+      500:
+        description: OCR 辨識過程發生系統錯誤
+    """
     # 1. 基本檔案檢查
     if 'file' not in request.files:
         return jsonify({"error": "請上傳圖片檔案"}), 400
@@ -77,6 +98,38 @@ def upload_prescription():
 def confirm_prescription():
     """
     接收前端修改後的最終資料，並正式寫入資料庫
+    ---
+    tags:
+      - Prescription Processing
+    parameters:
+      - in: body
+        name: body
+        required: true
+        description: 包含藥單ID與使用者校正後的各項明細
+        schema:
+          type: object
+          properties:
+            prescription_id:
+              type: integer
+              example: 1
+            data:
+              type: object
+              properties:
+                patient_name:
+                  type: string
+                  example: "王小明"
+                medicine_ch_name:
+                  type: string
+                  example: "紐黴素糖衣錠"
+    responses:
+      200:
+        description: 資料已成功存入系統
+      400:
+        description: 缺少資料或格式錯誤
+      404:
+        description: 找不到該筆藥單紀錄
+      500:
+        description: 存檔或資料庫寫入失敗
     """
     data = request.json
     if not data:
@@ -84,6 +137,7 @@ def confirm_prescription():
 
     # 取得前端傳回的資訊
     prescription_id = data.get('prescription_id')
+    print(prescription_id)
     final_data = data.get('data') # 這裡包含使用者修正後的姓名、藥名、天數等
 
     if not prescription_id or not final_data:
@@ -138,5 +192,26 @@ def confirm_prescription():
         return jsonify({"error": f"存檔失敗: {str(e)}"}), 500
 
 @main_bp.route('/test', methods=['GET'])
-def test():
-    return jsonify({"status": "running"})
+def test_connection():
+    """
+    測試後端伺服器是否正常運作
+    ---
+    tags:
+      - System Info
+    responses:
+      200:
+        description: 伺服器運作正常
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: success
+            message:
+              type: string
+              example: Flask 後端已啟動
+    """
+    return jsonify({
+        "status": "success",
+        "message": "Flask 後端已啟動，資料庫連線正常！"
+    }), 200

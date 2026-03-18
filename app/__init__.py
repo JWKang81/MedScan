@@ -2,6 +2,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flasgger import Swagger  #restful api
 from config import Config # 匯入寫的配置
 import os
 
@@ -15,12 +16,21 @@ def create_app():
     # 如果還沒建立 config.py，暫時可用下面這行簡單測試
     app.config.from_object(Config)
 
+    # Swagger UI 的基礎設定 (這會顯示在文件首頁)
+    app.config['SWAGGER'] = {
+        'title': '藥袋影像辨識系統 API (Prescription OCR API)',
+        'uiversion': 3,
+        'description': '提供前端上傳藥袋影像並進行 OCR 辨識，以及確認存檔的 RESTful API。'
+    }
+
     # 2. 允許跨域請求 (前端開發必備)
     CORS(app)
     
     # 3. 初始化組件
     db.init_app(app)
 
+    # 在這裡初始化 Swagger
+    Swagger(app)
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
 
