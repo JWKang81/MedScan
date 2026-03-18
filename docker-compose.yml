@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    build: .  # 根據當前目錄的 Dockerfile 建立 Flask 容器
+    ports:
+      - "3000:3000"  # 將電腦的 3000 對應到容器的 3000
+    environment:
+      # 告訴 Flask 資料庫在哪裡 (注意這裡的 host 是 'db'，也就是下面那個 MySQL 服務的名字)
+      - DATABASE_URL=mysql+pymysql://medicine_user:secret123@db:3306/prescription_db
+    depends_on:
+      - db  # 確保資料庫先啟動，Flask 再啟動
+    volumes:
+      - ./uploads:/app/uploads  # 將上傳的圖片掛載到本機，這樣重啟容器圖片才不會不見
+
+  db:
+    image: mysql:8.0  # 使用官方 MySQL 8.0 映像檔
+    ports:
+      - "3306:3306"
+    environment:
+      # 自動在容器內建立帳號、密碼與資料庫
+      MYSQL_DATABASE: prescription_db
+      MYSQL_USER: medicine_user
+      MYSQL_PASSWORD: secret123
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mysql_data:/var/lib/mysql  # 將資料庫的資料存到實體硬碟，避免重啟後資料消失
+
+# 宣告需要一個實體的空間來存 MySQL 資料
+volumes:
+  mysql_data:
