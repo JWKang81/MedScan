@@ -37,3 +37,7 @@ PyMySQL 或 mysqlclient：作為 Python 與 MySQL 溝通的底層驅動。
 
 使用MySQL Community Server
 圖形化介面MySQL Workbench也可以下載方便管理
+
+
+進行test測試時
+python -m pytest -v：這會以「模組模式」啟動 pytest來避免 pytest -v 找不到app資料夾在哪

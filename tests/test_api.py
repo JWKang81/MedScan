@@ -20,7 +20,7 @@ def client():
         # 3. 將這個假的 client 交給測試函數使用
         yield client
         
-        # 4. 測試結束後清理環境 (雖然記憶體 DB 關閉就消失了，但這是好習慣)
+        # 4. 測試結束後清理環境 (雖然記憶體 DB 關閉就消失了)
         with app.app_context():
             db.session.remove()
             db.drop_all()
