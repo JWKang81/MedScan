@@ -1,77 +1,43 @@
-# 藥袋影像辨識系統 (Prescription OCR System) - 後端 API
+# 🏥 Medicine Prescription OCR System (藥袋影像辨識與建檔系統)
 
-本專案是一個基於 Python Flask 與 MySQL 構建的後端系統，旨在接收使用者上傳的藥袋影像，儲存紀錄，並預留整合光學字元辨識 (OCR) 的介面，以自動解析藥袋上的用藥資訊。
+[![CI/CD Pipeline](https://github.com/你的GitHub帳號/Medicine/actions/workflows/ci.yml/badge.svg)](https://github.com/你的GitHub帳號/Medicine/actions)
+[![Python Version](https://img.shields.io/badge/python-3.9-blue.svg)](https://python.org)
+[![Docker](https://img.shields.io/badge/docker-compose-blue.svg)](https://www.docker.com/)
+[![Swagger API](https://img.shields.io/badge/API-Swagger%20OpenAPI-85EA2D.svg)](http://localhost:3000/apidocs/)
 
-##  目前已實作功能 (Phase 1)
-* **架構建立**：採用 Factory Pattern 構建 Flask 應用程式。
-* **資料庫整合**：透過 Flask-SQLAlchemy 介接 MySQL，並定義完整的關聯式資料表 (Users, Prescriptions, Medications)。
-* **自動建表機制**：系統啟動時會自動檢查並建立缺少的資料表與預設管理員帳號。
-* **影像上傳 API**：提供安全的圖片上傳接口，自動以 UUID 重新命名檔案防止覆蓋，並將上傳紀錄寫入資料庫。
+這是一個基於 Flask 開發的 RESTful API 服務，旨在透過 Tesseract OCR 技術自動擷取藥袋上的關鍵資訊（如：病患姓名、藥品名稱、用藥指示等），並將結構化的資料儲存至關聯式資料庫中。
 
-## 🛠 技術堆疊 (Tech Stack)
-* **後端框架**：Python 3.x, Flask
-* **資料庫**：MySQL 8.0+
-* **ORM 工具**：Flask-SQLAlchemy
-* **資料庫驅動**：PyMySQL
-* **跨域處理**：Flask-CORS
+本專案嚴格遵循**現代軟體工程實踐 (Software Engineering Practices)**，具備完整的自動化測試、容器化部署與持續整合流程。
 
-## 📁 專案目錄結構
-Medicine/
-├── app/
-│   ├── __init__.py       # Flask 工廠函數與資料庫初始化
-│   ├── models.py         # 資料庫 Schema 定義
-│   ├── routes.py         # API 路由邏輯
-│   └── recognition.py    # (待開發) 影像辨識模組
-├── uploads/              # 存放使用者上傳的藥袋照片
-├── config.py             # 環境變數與資料庫連線設定
-├── requirements.txt      # 專案依賴套件清單
-├── run.py                # 系統啟動進入點
-└── README.md             # 專案說明文件
+---
 
+## ✨ 核心亮點與技術棧 (Key Features & Tech Stack)
 
+* **Backend Framework**: Python 3.9, Flask (Blueprint 架構)
+* **REST API & Documentation**: 遵循 RESTful 設計準則，並整合 `Flasgger` 提供符合 OpenAPI (Swagger) 規範的互動式 API 文件。
+* **Optical Character Recognition (OCR)**: 整合 `Tesseract` 與 `OpenCV`，搭配 Regular Expression (正規表達式) 進行文字清洗與特徵萃取。
+* **Database**: MySQL 8.0, SQLAlchemy ORM (支援防範 SQL Injection 與連線池管理)。
+* **Containerization**: 撰寫 `Dockerfile` 與 `docker-compose.yml`，將應用程式、資料庫與 OCR 引擎完整封裝，確保跨平台環境一致性。
+* **Software Engineering Practices**:
+  * **TDD (Test-Driven Development)**: 使用 `pytest` 實作單元測試，並運用 SQLite 記憶體資料庫確保測試的隔離性與執行速度。
+  * **CI/CD Pipeline**: 透過 GitHub Actions 建立持續整合管線，實現自動化依賴安裝、測試驗證與 Docker 構建測試。
 
-1. 安裝環境與套件
-請確保系統已安裝 Python 3.x，接著在終端機執行：
-pip install -r requirements.txt
+---
 
-2. 資料庫設定
-確保 MySQL 服務已啟動。
-建立一個名為 prescription_db 的空資料庫：
-SQL
-CREATE DATABASE prescription_db CHARACTER SET utf8mb4;
+## 🚀 快速啟動 (Getting Started)
 
-3. 確認 config.py 內的連線字串與你的 MySQL 帳號密碼相符。
+透過 Docker Compose，您可以一鍵啟動整個系統，無需在本地端手動安裝資料庫或 OCR 引擎。
 
+### 1. 環境要求 (Prerequisites)
+* 安裝 [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+* Git
 
-📡 API 文件說明
-1. 系統狀態測試
-    Endpoint: /test
+### 2. 啟動步驟 (Installation & Execution)
 
-    Method: GET
+```bash
+# 複製專案原始碼
+git clone [https://github.com/你的GitHub帳號/Medicine.git](https://github.com/你的GitHub帳號/Medicine.git)
+cd Medicine
 
-    回傳成功範例:
-
-    JSON
-    {
-        "message": "API 運作中",
-        "status": "success"
-    }
-2. 上傳藥袋影像
-    Endpoint: /api/upload
-
-    Method: POST
-
-    Content-Type: multipart/form-data
-
-    參數:
-
-    file: (File) 藥袋圖片檔案，僅支援 .jpg, .jpeg, .png。
-
-    回傳成功範例:
-
-    JSON
-    {
-        "image_url": "uuid-string.jpg",
-        "message": "圖片上傳成功",
-        "prescription_id": 1
-    }
+# 使用 Docker Compose 一鍵建置並啟動服務 (包含 Web 與 MySQL)
+docker compose up --build -d
