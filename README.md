@@ -1,6 +1,6 @@
 # Medicine Prescription OCR System (藥袋影像辨識與建檔系統)
 
-[![CI/CD](https://github.com/JWKang81/Medicine/actions/workflows/ci.yml/badge.svg)](https://github.com/你的GitHub帳號/Medicine/actions)
+[![CI/CD](https://github.com/JWKang81/Medicine/actions/workflows/ci.yml/badge.svg)](https://github.com/JWKang81/Medicine/actions)
 [![Python Version](https://img.shields.io/badge/python-3.9-blue.svg)](https://python.org)
 [![Docker](https://img.shields.io/badge/docker-compose-blue.svg)](https://www.docker.com/)
 [![Swagger API](https://img.shields.io/badge/API-Swagger%20OpenAPI-85EA2D.svg)](http://localhost:3000/apidocs/)
