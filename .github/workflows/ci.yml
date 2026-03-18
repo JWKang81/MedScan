@@ -1,0 +1,41 @@
+name: Medicine OCR Project CI
+
+# 1. 觸發條件：當有人 push 程式碼到 main 分支，或發起 Pull Request 時觸發
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    # 2. 執行環境：使用最新版的 Ubuntu 虛擬機
+    runs-on: ubuntu-latest
+
+    steps:
+    # 3. 步驟一：把你的程式碼 clone 到這台虛擬機裡
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # 4. 步驟二：安裝 Python 3.9 環境
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    # 5. 步驟三：安裝專案依賴套件 (會讀取你之前建立的 requirements.txt)
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-flask
+
+    # 6. 步驟四：執行 TDD 自動化測試
+    - name: Run Pytest
+      run: |
+        python -m pytest -v
+
+    # 7. 步驟五：測試 Docker 是否能成功編譯 (驗證你的 Dockerfile 沒寫錯)
+    - name: Build Docker Image
+      run: |
+        docker build -t medicine-ocr-app:test .
