@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flasgger import Swagger  #restful api
 import os
-
 from config import Config  
 
 # 實例化資料庫物件，暫不傳入 app

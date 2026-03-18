@@ -39,3 +39,11 @@ jobs:
     - name: Build Docker Image
       run: |
         docker build -t medicine-ocr-app:test .
+    # 8. 設定根目錄
+    - name: Run Pytest
+      env:
+        # 重點：強制將當前目錄 (.) 加入 Python 搜尋路徑
+        PYTHONPATH: .
+        DATABASE_URL: sqlite:///:memory:
+      run: |
+        python -m pytest -v

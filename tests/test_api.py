@@ -1,11 +1,8 @@
-import pytest
-
-
 import sys
 import os
-
-# 這一行是為了確保 GitHub Actions 能找到根目錄下的所有模組
+# 確保 Python 搜尋路徑包含專案根目錄
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import pytest
 
 from app import create_app
 from app import db
