@@ -3,8 +3,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flasgger import Swagger  #restful api
-from config import Config # 匯入寫的配置
 import os
+
+try:
+    from config import Config
+except ImportError:
+    from ..config import Config # 針對某些測試環境的補救路徑
 
 # 實例化資料庫物件，暫不傳入 app
 db = SQLAlchemy()
