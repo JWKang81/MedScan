@@ -32,7 +32,7 @@ jobs:
       - name: Run Pytest
         env:
           PYTHONPATH: .
-          DATABASE_URL: sqlite:///:memory:
+          DATABASE_URL: "sqlite:///:memory:"
         run: |
           python -m pytest -v
 
