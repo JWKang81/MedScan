@@ -137,7 +137,6 @@ def confirm_prescription():
 
     # 取得前端傳回的資訊
     prescription_id = data.get('prescription_id')
-    print(prescription_id)
     final_data = data.get('data') # 這裡包含使用者修正後的姓名、藥名、天數等
 
     if not prescription_id or not final_data:
