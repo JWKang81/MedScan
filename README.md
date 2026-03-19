@@ -1,10 +1,5 @@
 # Medicine Prescription OCR System (藥袋影像辨識與建檔系統)
 
-[![CI/CD](https://github.com/JWKang81/Medicine/actions/workflows/ci.yml/badge.svg)](https://github.com/JWKang81/Medicine/actions)
-[![Python Version](https://img.shields.io/badge/python-3.9-blue.svg)](https://python.org)
-[![Docker](https://img.shields.io/badge/docker-compose-blue.svg)](https://www.docker.com/)
-[![Swagger API](https://img.shields.io/badge/API-Swagger%20OpenAPI-85EA2D.svg)](http://localhost:3000/apidocs/)
-
 這是一個基於 Flask 開發的 RESTful API 服務，旨在透過 Tesseract OCR 技術自動擷取藥袋上的關鍵資訊（如：病患姓名、藥品名稱、用藥指示等），並將結構化的資料儲存至關聯式資料庫中。
 
 本專案嚴格遵循**現代軟體工程實踐 (Software Engineering Practices)**，具備完整的自動化測試、容器化部署與持續整合流程。
