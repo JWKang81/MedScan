@@ -3,11 +3,10 @@ from dotenv import load_dotenv
 # 載入 .env 檔案中的變數到系統環境中
 load_dotenv()
 class Config:
-    # 這裡的邏輯是：優先讀取環境變數 DATABASE_URL。
-    # 如果讀不到 (例如你在本機開發沒用 Docker)，就用後面的本機預設值。
+   
     # 密碼記得使用環境變數存
     # 優先讀取 .env 或 Docker 給的 DATABASE_URL
-    # 如果找不到 (例如別人剛 clone 你的專案)，就給一個預設的假連線或測試用資料庫
+    # 如果找不到，就給一個預設的假連線或測試用資料庫
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL', 
         'mysql+pymysql://root:your_password_here@127.0.0.1/prescription_db'
@@ -16,9 +15,6 @@ class Config:
     '''
     # 1. 資料庫設定
     # 格式: mysql+pymysql://使用者名稱:密碼@主機位址:埠號/資料庫名稱
-    # 請根據你的實際 MySQL 設定修改下方連線字串
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://root:55410801@localhost:3306/prescription_db?charset=utf8mb4'
     '''
     # 關閉追蹤修改以節省記憶體
     SQLALCHEMY_TRACK_MODIFICATIONS = False

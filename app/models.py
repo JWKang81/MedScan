@@ -1,7 +1,7 @@
 
-# 定義 MySQL 資料表結構 (Users, Prescriptions...)
+# 定義 MySQL 資料表結構 
 from datetime import datetime
-# 假設你在 app/__init__.py 已經初始化了 db = SQLAlchemy()
+# 在 app/__init__.py 已經初始化了! db = SQLAlchemy()
 from app import db 
 
 class User(db.Model):
@@ -22,13 +22,12 @@ class Prescription(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, comment='關聯的使用者ID')
-    
     image_path = db.Column(db.String(255), nullable=False, comment='影像在伺服器上的儲存路徑')
     hospital_name = db.Column(db.String(100), nullable=True, comment='醫療院所名稱')
     patient_name = db.Column(db.String(50), nullable=True, comment='病患姓名(可由OCR辨識)')
     dispense_date = db.Column(db.Date, nullable=True, comment='調劑日期')
     
-    # 狀態控管非常重要：辨識中(processing)、待確認(pending_review)、已確認(confirmed)
+    # 狀態控管：辨識中(processing)、待確認(pending_review)、已確認(confirmed)
     status = db.Column(db.String(20), default='processing', comment='辨識與確認狀態') 
     created_at = db.Column(db.DateTime, default=datetime.utcnow, comment='上傳時間')
     

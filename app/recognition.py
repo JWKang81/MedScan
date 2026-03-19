@@ -1,19 +1,11 @@
 import pytesseract
 from PIL import Image
 import cv2
-import numpy as np
-import os
-
-import re
-
-import pytesseract
-from PIL import Image
-import cv2
 import re
 
 def parse_da_pharmacy(raw_text):
     """
-    專為「大藥局」藥袋 (005.jpg) 設計的正則表達式解析器
+    專為特定藥袋 設計的正則表達式解析器
     """
     data = {
         "hospital": "大藥局",
@@ -94,19 +86,10 @@ def scan_prescription(image_path):
         # 2. 執行 OCR
         raw_text = pytesseract.image_to_string(processed_pil_img, lang='chi_tra+eng')
         
-        # 可在終端機印出原始文字供除錯參考
         print("\n=== OCR 原始文字 ===")
         print(raw_text)
         print("====================\n")
         return raw_text
-        # 3. 使用專屬解析器萃取資料
-        extracted_data = parse_da_pharmacy(raw_text)
-
-        return {
-            "status": "success",
-            "data": extracted_data,
-            "raw_text": raw_text
-        }
 
     except Exception as e:
         return {
