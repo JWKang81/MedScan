@@ -7,15 +7,13 @@ class Config:
     # 密碼記得使用環境變數存
     # 優先讀取 .env 或 Docker 給的 DATABASE_URL
     # 如果找不到，就給一個預設的假連線或測試用資料庫
+    # 1. 資料庫設定
+    # 格式: mysql+pymysql://使用者名稱:密碼@主機位址:埠號/資料庫名稱
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL', 
         'mysql+pymysql://root:your_password_here@127.0.0.1/prescription_db'
     )
-    
-    '''
-    # 1. 資料庫設定
-    # 格式: mysql+pymysql://使用者名稱:密碼@主機位址:埠號/資料庫名稱
-    '''
+
     # 關閉追蹤修改以節省記憶體
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
