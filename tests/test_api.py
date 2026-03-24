@@ -44,10 +44,11 @@ def test_system_status(client):
     assert response.json['status'] == 'success'
     assert 'Flask 後端已啟動' in response.json['message']
 
+
 def test_upload_without_file(client):
     """測試案例 2：防呆機制測試，沒夾帶檔案應該被擋下並回傳 400"""
     # 模擬前端發送 POST 請求，但不帶任何檔案
-    response = client.post('/api/upload')
+    response = client.post('/api/prescriptions')
     
     assert response.status_code == 400
     assert response.json['error'] == '請上傳圖片檔案'

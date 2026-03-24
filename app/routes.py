@@ -181,3 +181,4 @@ def delete_prescription(pre_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"刪除失敗: {str(e)}"}), 500
+    
