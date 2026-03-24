@@ -41,7 +41,7 @@ class Medication(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     prescription_id = db.Column(db.Integer, db.ForeignKey('prescriptions.id'), nullable=False, comment='關聯的藥單ID')
     
-    # 這些是 OCR 辨識的主要目標欄位
+    # 這些是 OCR 主要目標欄位
     medicine_name = db.Column(db.String(150), nullable=False, comment='藥品名稱(中/英文)')
     dosage = db.Column(db.String(50), nullable=True, comment='每次用量 (如: 1顆, 10ml)')
     frequency = db.Column(db.String(50), nullable=True, comment='使用頻率 (如: 一天三次, 飯後)')

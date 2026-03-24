@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"  # 將電腦的 3000 對應到容器的 3000
     environment:
-      # 告訴 Flask 資料庫在哪裡 (注意這裡的 host 是 'db'，也就是下面那個 MySQL 服務的名字)
+      # 告訴 Flask 資料庫在哪裡 (注意這裡的 host 是 'db'，就是下面那個 MySQL 服務的名字)
       - DATABASE_URL=mysql+pymysql://medicine_user:secret123@db:3306/prescription_db
     depends_on:
       - db  # 確保資料庫先啟動，Flask 再啟動
