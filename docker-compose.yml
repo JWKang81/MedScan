@@ -3,6 +3,9 @@ version: '3.8'
 services:
   web:
     build: .  # 根據當前目錄的 Dockerfile 建立 Flask 容器
+    depends_on: #等db建置好再說
+      db:
+        condition: service_healthy
     ports:
       - "3000:3000"  # 將電腦的 3000 對應到容器的 3000
     environment:
@@ -25,6 +28,11 @@ services:
 
   db:
     image: mysql:8.0  # 使用官方 MySQL 8.0 映像檔
+    # 1. MySQL 加上檢查
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
     ports:
       - "3307:3306" # 將電腦的 3307 對應到容器內的 3306
     environment:
