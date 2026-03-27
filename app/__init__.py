@@ -41,10 +41,12 @@ def create_app():
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
 
-    # 4. 註冊路由 (Blueprint)
+    # 4. 註冊路由 (Blueprint) routes裡面的
     from .routes import main_bp
     app.register_blueprint(main_bp)
-
+    # auth_routes裡的
+    from .auth_routes import auth_bp
+    app.register_blueprint(auth_bp)
     # 確保資料表存在 
     with app.app_context():
         # 這裡需要匯入 models 以便 SQLAlchemy 知道要建立哪些表

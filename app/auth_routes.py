@@ -8,14 +8,16 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 @auth_bp.route('/register', methods=['POST'])
 def register():
     """
-    使用者註冊
+    使用者註冊系統
+    提供帳號、密碼與電子信箱來建立新使用者。密碼將在後端進行雜湊加密。
     ---
     tags:
-      - Authentication
+      - Authentication (認證授權)
     parameters:
       - in: body
         name: body
         required: true
+        description: 註冊所需的帳號資訊
         schema:
           type: object
           required:
@@ -24,10 +26,29 @@ def register():
           properties:
             username:
               type: string
+              description: 使用者帳號 (必須唯一)
+              example: "interview_user"
             password:
               type: string
+              description: 使用者密碼
+              example: "my_secure_password"
             email:
               type: string
+              description: 電子信箱 (選填)
+              example: "user@example.com"
+    responses:
+      201:
+        description: 註冊成功
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "註冊成功！"
+      400:
+        description: 缺少必填欄位 (帳號或密碼)
+      409:
+        description: 帳號已被註冊 (資料庫衝突)
     """
     data = request.json
     username = data.get('username')
@@ -53,10 +74,42 @@ def register():
 @auth_bp.route('/login', methods=['POST'])
 def login():
     """
-    使用者登入並獲取 Token
+    使用者登入並取得 JWT Token
+    驗證帳號密碼後，核發可用於存取受保護 API 的 JWT (JSON Web Token)。
     ---
     tags:
-      - Authentication
+      - Authentication (認證授權)
+    parameters:
+      - in: body
+        name: body
+        required: true
+        description: 登入憑證
+        schema:
+          type: object
+          required:
+            - username
+            - password
+          properties:
+            username:
+              type: string
+              example: "interview_user"
+            password:
+              type: string
+              example: "my_secure_password"
+    responses:
+      200:
+        description: 登入成功，回傳 JWT Token
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "登入成功"
+            access_token:
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI..."
+      401:
+        description: 帳號或密碼錯誤 (授權失敗)
     """
     data = request.json
     username = data.get('username')

@@ -1,4 +1,4 @@
-
+from werkzeug.security import generate_password_hash, check_password_hash #雜湊密碼
 # 定義 MySQL 資料表結構 
 from datetime import datetime
 # 在 app/__init__.py 已經初始化了! db = SQLAlchemy()
@@ -15,7 +15,16 @@ class User(db.Model):
     
     # 建立與藥單的關聯 (One-to-Many)
     prescriptions = db.relationship('Prescription', backref='user', lazy=True)
-
+    # ==========================================
+    # 密碼處理部分, 封裝, 確保為加密的密碼不會被取用
+    # ==========================================
+    def set_password(self, password):
+        """將明文密碼轉換為雜湊值 (Hash) 並儲存"""
+        self.password_hash = generate_password_hash(password)
+    def check_password(self, password):
+        """驗證輸入的密碼是否正確"""
+        return check_password_hash(self.password_hash, password)
+    
 class Prescription(db.Model):
     """藥單/藥袋主檔：負責記錄這次上傳的影像與整體資訊"""
     __tablename__ = 'prescriptions'
