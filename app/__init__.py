@@ -35,7 +35,24 @@ def create_app():
     db.init_app(app)
 
     # 在這裡初始化 Swagger
-    Swagger(app)
+    # 設定 Swagger 樣板，加入 JWT 認證支援
+    swagger_template = {
+      "swagger": "2.0",
+      "info": {
+        "title": "Medicine OCR API",
+        "description": "藥袋辨識與建檔系統 API 文件",
+        "version": "1.0.0"
+      },
+      "securityDefinitions": {
+        "Bearer": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header",
+          "description": "請輸入 JWT Token。格式：Bearer <你的Token> (注意 Bearer 後面有一個半形空格)"
+        }
+      }
+    }
+    swagger = Swagger(app, template=swagger_template)
 
     # 檢查有無存放照片地方
     if not os.path.exists('uploads'):

@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from app import db
 from app.models import Prescription, Medication
 import uuid
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
 # 匯入辨識函數
 from .recognition import scan_prescription, parse_da_pharmacy
 
@@ -46,12 +46,15 @@ def test_connection():
 
 # 1. CREATE (新增/上傳並辨識藥袋)
 @main_bp.route('/api/prescriptions', methods=['POST'])
+@jwt_required()  #加上這行裝飾器，沒有 Token 的人會直接被踢出去 (401 Unauthorized)
 def create_prescription():
     """
     上傳藥袋影像並進行 OCR 辨識
     ---
     tags:
       - Prescriptions (藥袋資源)
+    security:
+      - Bearer: []  # 告訴 Swagger 這支 API 需要 Token 才能測試
     consumes:
       - multipart/form-data
     parameters:
@@ -66,6 +69,9 @@ def create_prescription():
       400:
         description: 檔案格式錯誤
     """
+
+    #直接從 JWT 裡面抽出剛剛登入的使用者 ID！
+    current_user_id = get_jwt_identity()
     if 'file' not in request.files:
         return jsonify({"error": "請上傳圖片檔案"}), 400
     
@@ -78,8 +84,8 @@ def create_prescription():
         file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
-        # 建立資源
-        new_pre = Prescription(user_id=1, image_path=filename, status='processing')
+        # 建立資源, user_id 為拿到token的人
+        new_pre = Prescription(user_id=current_user_id, image_path=filename, status='processing')
         db.session.add(new_pre)
         db.session.commit()
 
