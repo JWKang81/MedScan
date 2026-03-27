@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flasgger import Swagger  #restful api
 import os
 from config import Config  
+from flask_jwt_extended import JWTManager
 
 # 實例化資料庫物件，暫不傳入 app
 db = SQLAlchemy()
@@ -14,6 +15,11 @@ def create_app():
 
     # 1. 載入配置 (建立 config.py)
     app.config.from_object(Config)
+
+    # 設定 JWT 的密鑰 (記得把這個變數加到 .env 和 config.py 裡)
+    app.config['JWT_SECRET_KEY'] = 'your-super-secret-jwt-key'
+    # 初始化 JWT
+    jwt = JWTManager(app)
 
     # Swagger UI 的基礎設定 (文件首頁)
     app.config['SWAGGER'] = {

@@ -240,7 +240,23 @@ def update_prescription(pre_id):
 # 5. DELETE (刪除藥單)
 @main_bp.route('/api/prescriptions/<int:pre_id>', methods=['DELETE'])
 def delete_prescription(pre_id):
-    """刪除指定藥單與其關聯的圖片、藥品明細"""
+    """
+    刪除指定藥單與其關聯資料
+    ---
+    tags:
+      - Prescriptions (藥袋資源)
+    parameters:
+      - in: path
+        name: pre_id
+        type: integer
+        required: true
+        description: 欲刪除的藥單 ID
+    responses:
+      200:
+        description: 紀錄已刪除
+      404:
+        description: 找不到該筆紀錄
+    """
     try:
         prescription = Prescription.query.get(pre_id)
         if not prescription:
