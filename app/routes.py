@@ -28,6 +28,15 @@ def index():
 
 @main_bp.route('/test', methods=['GET'])
 def test_connection():
+    """
+    測試後端伺服器是否正常運作
+    ---
+    tags:
+      - System Info
+    responses:
+      200:
+        description: 伺服器運作正常
+    """
     return jsonify({"status": "success", "message": "Flask 後端已啟動！"}), 200
 
 
@@ -38,7 +47,25 @@ def test_connection():
 # 1. CREATE (新增/上傳並辨識藥袋)
 @main_bp.route('/api/prescriptions', methods=['POST'])
 def create_prescription():
-    """上傳藥袋影像並進行 OCR 辨識 """
+    """
+    上傳藥袋影像並進行 OCR 辨識
+    ---
+    tags:
+      - Prescriptions (藥袋資源)
+    consumes:
+      - multipart/form-data
+    parameters:
+      - in: formData
+        name: file
+        type: file
+        required: true
+        description: 藥袋的照片 (支援 jpg, png)
+    responses:
+      201:
+        description: 上傳並辨識成功
+      400:
+        description: 檔案格式錯誤
+    """
     if 'file' not in request.files:
         return jsonify({"error": "請上傳圖片檔案"}), 400
     
@@ -76,7 +103,15 @@ def create_prescription():
 # 2. READ ALL (取得所有藥單列表)
 @main_bp.route('/api/prescriptions', methods=['GET'])
 def get_prescriptions():
-    """取得所有藥單資料 (新增的實用功能)"""
+    """
+    取得所有藥單資料列表
+    ---
+    tags:
+      - Prescriptions (藥袋資源)
+    responses:
+      200:
+        description: 成功取得列表
+    """
     prescriptions = Prescription.query.all()
     result = []
     for p in prescriptions:
@@ -92,7 +127,23 @@ def get_prescriptions():
 # 3. READ ONE (取得單一藥單詳細資訊)
 @main_bp.route('/api/prescriptions/<int:pre_id>', methods=['GET'])
 def get_prescription(pre_id):
-    """取得特定 ID 的藥單明細"""
+    """
+    取得特定 ID 的藥單明細
+    ---
+    tags:
+      - Prescriptions (藥袋資源)
+    parameters:
+      - in: path
+        name: pre_id
+        type: integer
+        required: true
+        description: 藥單的 ID
+    responses:
+      200:
+        description: 成功取得明細
+      404:
+        description: 找不到該筆紀錄
+    """
     prescription = Prescription.query.get(pre_id)
     if not prescription:
         return jsonify({"error": "找不到該筆紀錄"}), 404
@@ -108,7 +159,38 @@ def get_prescription(pre_id):
 # 4. UPDATE (更新/確認藥單資料)
 @main_bp.route('/api/prescriptions/<int:pre_id>', methods=['PUT'])
 def update_prescription(pre_id):
-    """接收修改後的最終資料，更新資料庫 (取代原本的 /confirm)"""
+    """
+    接收前端修改後的最終資料，更新資料庫
+    ---
+    tags:
+      - Prescriptions (藥袋資源)
+    parameters:
+      - in: path
+        name: pre_id
+        type: integer
+        required: true
+        description: 藥單的 ID
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                patient_name:
+                  type: string
+                  example: "王小明"
+                medicine_ch_name:
+                  type: string
+                  example: "普拿疼"
+    responses:
+      200:
+        description: 資料已成功更新
+      404:
+        description: 找不到該筆紀錄
+    """
     data = request.json
     if not data or 'data' not in data:
         return jsonify({"error": "缺少資料"}), 400
