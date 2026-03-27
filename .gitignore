@@ -2,7 +2,6 @@
 *.jpg
 .DS_Store
 *.html
-.env
 
 # 隱藏機密環境變數
 .env

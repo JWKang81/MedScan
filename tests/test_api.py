@@ -28,7 +28,7 @@ def client():
 @pytest.fixture
 def auth_headers(client):
     """
-    這是一把萬能鑰匙！
+    這是一把萬能鑰匙
     它會自動幫測試腳本註冊、登入，並回傳帶有 JWT Token 的 HTTP Headers。
     """
     # 1. 先註冊一個測試帳號
@@ -90,7 +90,7 @@ def test_create_prescription_without_token(client):
     assert response.status_code == 401 # 401 Unauthorized
 
 
-# 面試亮點：使用 @patch 來 Mock (攔截) 耗時的 OCR 處理程序
+# 使用 @patch 來 Mock (攔截) 耗時的 OCR 處理程序
 @patch('app.routes.scan_prescription')
 @patch('app.routes.parse_da_pharmacy')
 def test_create_prescription_with_token(mock_parse, mock_scan, client, auth_headers):
@@ -108,7 +108,7 @@ def test_create_prescription_with_token(mock_parse, mock_scan, client, auth_head
         'file': (io.BytesIO(b"fake image content"), 'test_prescription.jpg')
     }
 
-    # 發出 POST 請求，記得帶上我們的 auth_headers 萬能鑰匙！
+    # 發出 POST 請求，記得帶上 auth_headers 萬能鑰匙
     response = client.post(
         '/api/prescriptions', 
         data=data, 
